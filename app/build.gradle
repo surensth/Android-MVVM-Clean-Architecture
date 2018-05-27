@@ -39,4 +39,8 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$room_version"
     implementation "android.arch.persistence.room:rxjava2:$room_version"
     kapt "android.arch.persistence.room:compiler:$room_version"
+
+    //moshi to work with the local database for maping the entitites
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+
 }
