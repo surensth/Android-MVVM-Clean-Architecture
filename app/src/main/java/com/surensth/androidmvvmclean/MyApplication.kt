@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import com.surensth.androidmvvmclean.di.component.DaggerAppComponent
 import com.surensth.androidmvvmclean.di.module.AppModule
+import com.surensth.androidmvvmclean.di.module.NetModule
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -21,7 +22,10 @@ class MyApplication:Application(), HasActivityInjector {
         super.onCreate()
 
         //DaggerAppComponent is obtained in runtime from AppComponent
-        DaggerAppComponent.builder().appModule(AppModule(this)).build().inject(this)
+        DaggerAppComponent.builder()
+                .appModule(AppModule(this))
+                .netModule(NetModule(BuildConfig.URL))
+                .build().inject(this)
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = activityInjector
