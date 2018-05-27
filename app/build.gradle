@@ -51,8 +51,14 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+
     //RxJava RxAndroid
     implementation "io.reactivex.rxjava2:rxjava:$rx_java_2_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
 
+    //Lifecycle
+    implementation "android.arch.lifecycle:extensions:$arch_lifecycle_version"
+    kapt "android.arch.lifecycle:compiler:$arch_lifecycle_version"
+    //RxJava 2 LiveData
+    implementation "android.arch.lifecycle:reactivestreams:$arch_lifecycle_version"
 }
