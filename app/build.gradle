@@ -16,8 +16,12 @@ android {
     }
     buildTypes {
         release {
+            buildConfigField 'String', 'URL', '"https://api.coinmarketcap.com/v1/"'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField 'String', 'URL', '"https://api.coinmarketcap.com/v1/"'
         }
     }
 }
