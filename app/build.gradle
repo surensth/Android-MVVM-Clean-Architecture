@@ -43,4 +43,12 @@ dependencies {
     //moshi to work with the local database for maping the entitites
     implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
 
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    //RxJava RxAndroid
+    implementation "io.reactivex.rxjava2:rxjava:$rx_java_2_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
+
 }
