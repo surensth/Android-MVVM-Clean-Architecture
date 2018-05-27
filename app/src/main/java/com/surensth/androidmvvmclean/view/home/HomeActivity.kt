@@ -1,63 +1,43 @@
 package com.surensth.androidmvvmclean.view.home
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import com.surensth.androidmvvmclean.R
 import com.surensth.androidmvvmclean.data.model.Cryptocurrency
-import com.surensth.androidmvvmclean.data.source.remote.ApiInterface
-import com.surensth.androidmvvmclean.network.ApiClient
+import com.surensth.androidmvvmclean.viewmodel.CryptocurrenciesViewModel
+import com.surensth.androidmvvmclean.viewmodel.CryptocurrenciesViewModelFactory
 import dagger.android.AndroidInjection
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
-import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_home.*
+import javax.inject.Inject
 
 class HomeActivity : AppCompatActivity() {
-    val compositeDisposable = CompositeDisposable()
-
+    @Inject
+    lateinit var cryptocurrenciesViewModelFactory: CryptocurrenciesViewModelFactory
+    lateinit var cryptocurrenciesViewModel: CryptocurrenciesViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         AndroidInjection.inject(this)
 
-        showCryptoCurriencies()
-    }
+        cryptocurrenciesViewModel = ViewModelProviders.of(this, cryptocurrenciesViewModelFactory).get(
+                CryptocurrenciesViewModel::class.java)
 
-    private fun showCryptoCurriencies() {
-        val cryptocurrenciesResponse = getCryptocurrencies()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+        cryptocurrenciesViewModel.loadCryptocurrencies()
 
-        val disposableObserver =
-                cryptocurrenciesResponse.subscribeWith(object : DisposableObserver<List<Cryptocurrency>>() {
-                    override fun onComplete() {
-                    }
-
-                    override fun onNext(cryptocurrencies: List<Cryptocurrency>) {
-                        val listSize = cryptocurrencies.size
-                        Log.v("ITEMS **** ", listSize.toString())
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Log.v("ERROR *** ", e.message)
-                    }
-
+        cryptocurrenciesViewModel.cryptocurrenciesResult().observe(this,
+                Observer<List<Cryptocurrency>> {
+                    cryptotextView.text = "Hello ${it?.size} cryptocurrencies"
                 })
 
-        compositeDisposable.addAll(disposableObserver)
-
-    }
-
-    private fun getCryptocurrencies(): Observable<List<Cryptocurrency>> {
-        val retrofit = ApiClient.getClient()
-        val apiInterface = retrofit.create(ApiInterface::class.java)
-        return apiInterface.getCryptocurrencies("0")
+        cryptocurrenciesViewModel.cryptocurrenciesError().observe(this, Observer<String> {
+            cryptotextView.text = "Hello error $it"
+        })
     }
 
     override fun onDestroy() {
-        compositeDisposable.dispose()
+        cryptocurrenciesViewModel.disposeElements()
         super.onDestroy()
     }
 }
